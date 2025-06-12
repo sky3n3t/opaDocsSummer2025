@@ -42,7 +42,7 @@ export default function BuiltinSearch({}) {
 			})).reduce((a,b)=>a.concat(b),[])
 	});
 	const filteredRows = allRows.map((row)=>{
-		return (row.name.includes(searchTerm)&&(!selectedModule||row.module==selectedModule))?row:null;
+		return ((row.name.includes(searchTerm)||row.signature.includes(searchTerm))&&(!selectedModule||row.module==selectedModule))?row:null;
 	}).filter((a)=>a!=null&&(searchTerm||selectedModule));
 	console.log(filteredRows);
 	return(
@@ -52,23 +52,31 @@ export default function BuiltinSearch({}) {
 		{Object.keys(builtins._categories).map((mod)=>(<option value={mod}>{mod}</option>))}
 		</select>
 		<input type="text" placeholder="search builtins" value={searchTerm} onChange={(e)=>setSearchTerm(e.target.value)}/>
-		{filteredRows.length>0&&(
+		{filteredRows.length>0&&filteredRows.length<=10&&(
 			<table>
 			<thead>
 			<tr>
-			<th>Module</th>
+			<th>Category</th>
 			<th>Name</th>
-			<th>Wasm</th>
-			<th>Signature</th>
-			<th>Introduced</th>
+			<th>Meta</th>
 			</tr>
 			</thead>
 			<tbody>
 			{filteredRows.map((row)=>(
 				<tr>
 				<td>{row.module}</td>
-				<td><a href={`#${row.anchor}`}> {row.name}</a></td>
-{row.wasm
+				<td><a href={`#${row.anchor}`}> {row.name}</a><br/><code>{row.signature}</code></td>
+{row.introduced && row.introduced !== "edge" && row.introduced !== "v0.17.0" && (
+                      <a
+                        href={`https://github.com/open-policy-agent/opa/releases/${row.introduced}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <span>{row.introduced}</span>
+                      </a>
+                    )}
+<br/>
+                    {row.introduced === "edge" && <span>edge</span>} {row.wasm
                       ? (
                         <span
                           style={{
@@ -99,8 +107,7 @@ export default function BuiltinSearch({}) {
                         </span>
                       )}
 
-				<td><code>{row.signature}</code></td>
-				<td>{row.introduced}</td>
+
 				</tr>
 			))}
 			</tbody>
