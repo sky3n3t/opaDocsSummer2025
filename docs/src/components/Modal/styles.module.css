@@ -1,0 +1,25 @@
+.modalBack {
+	position: fixed;
+	z-index: 1;
+	height: 100vh;
+	max-height: 100vh;
+	padding: 10rem;
+	left: 0;
+	top: 0;
+	width: 100vw;
+	display: grid;
+	background-color: rgba(0, 0, 0, 0.322);
+	overflow: hidden;
+}
+
+.modalContainer {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: flex-start;
+	height: auto;
+	max-height: 90rem;
+	background-color: var(--ifm-background-surface-color);
+	border-radius: 5px;
+	overflow: hidden;
+}

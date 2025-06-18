@@ -1,0 +1,73 @@
+.versionTag a:link {
+	color: inherit;
+}
+
+.versionTag {
+	background-color: slategrey;
+	color: white;
+	font-weight: bold;
+	font-size: 0.8rem;
+	padding: 0.1rem 0.2rem;
+	border-radius: 0.2rem;
+	margin-bottom: 0.5rem;
+}
+
+.versionTag a:visited {
+	color: inherit;
+}
+
+.wasmTag {
+	background-color: seagreen;
+	color: white;
+	font-weight: bold;
+	font-size: 0.8rem;
+	padding: 0.1rem 0.2rem;
+	border-radius: 0.2rem;
+}
+
+.sdkTag {
+	background-color: darkgoldenrod;
+	color: white;
+	font-weight: bold;
+	font-size: 0.8rem;
+	padding: 0.1rem 0.2rem;
+	border-radius: 0.2rem;
+	white-space: nowrap;
+}
+
+h1 code,
+h2 code {
+	background-color: inherit;
+	border-bottom: dashed var(--ifm-table-border-color);
+	border-radius: 0;
+}
+
+h2 code {
+	border-bottom-style: dotted;
+}
+
+.extraInfo {
+	display: flex;
+	flex-direction: column;
+	background: var(--ifm-background-color);
+	padding-top: .5rem;
+	margin-left: 3rem;
+	overflow: scroll;
+	padding-bottom: 10rem;
+	margin-right: 1rem;
+}
+
+.builtinDisp {
+	display: flex;
+	flex-direction: column;
+	margin-left: 1rem;
+	background-color: var(--ifm-background-surface-color);
+}
+
+.functionExamples {
+	max-width: 75rem;
+	overflow: scroll;
+	padding-right: 5rem;
+	padding-top: .5rem;
+	padding-bottom: 10rem;
+}
