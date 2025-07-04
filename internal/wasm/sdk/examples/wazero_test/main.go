@@ -18,27 +18,27 @@ import (
 // of the main.go.
 
 func _builtin0(ctx context.Context, id, _ctx int32) int32 {
-	fmt.Printf("%d:%d", id, _ctx)
+	fmt.Printf("%d:%d\n", id, _ctx)
 	return 0
 }
 
 func _builtin1(ctx context.Context, id, _ctx, arg1 int32) int32 {
-	fmt.Printf("%d:%d:%d", id, _ctx, arg1)
+	fmt.Printf("%d:%d:%d\n", id, _ctx, arg1)
 	return 0
 }
 
 func _builtin2(ctx context.Context, id, _ctx, arg1, arg2 int32) int32 {
-	fmt.Printf("%d:%d:%d:%d", id, _ctx, arg1, arg2)
+	fmt.Printf("%d:%d:%d:%d\n", id, _ctx, arg1, arg2)
 	return 0
 }
 
 func _builtin3(ctx context.Context, id, _ctx, arg1, arg2, arg3 int32) int32 {
-	fmt.Printf("%d:%d:%d:%d:%d", id, _ctx, arg1, arg2, arg3)
+	fmt.Printf("%d:%d:%d:%d:%d\n", id, _ctx, arg1, arg2, arg3)
 	return 0
 }
 
 func _builtin4(ctx context.Context, id, _ctx, arg1, arg2, arg3, arg4 int32) int32 {
-	fmt.Printf("%d:%d:%d:%d:%d:%d", id, _ctx, arg1, arg2, arg3, arg4)
+	fmt.Printf("%d:%d:%d:%d:%d:%d\n", id, _ctx, arg1, arg2, arg3, arg4)
 	return 0
 }
 
@@ -58,8 +58,18 @@ func _builtinAbort(ctx context.Context, ptr int32) {
 	log.Panic("abort", 0)
 }
 
-func _builtinPrintln(ctx context.Context, id int32) {
-	fmt.Printf("%d", id)
+func _builtinPrintln(ctx context.Context, ptr int32) {
+	var r wazero.Runtime = ctx.Value("runtime").(wazero.Runtime)
+	data, _ := r.Module("env").ExportedMemory("memory").ReadByte(uint32(ptr))
+	r.Module("env").ExportedMemory("memory")
+	idx := 0
+	for data != 0b00 {
+		idx++
+		data, _ = r.Module("env").ExportedMemory("memory").ReadByte(uint32(ptr) + uint32(idx))
+	}
+
+	outp, _ := r.Module("env").ExportedMemory("memory").Read(uint32(ptr), uint32(idx))
+	fmt.Printf("%s\n", string(outp[:]))
 }
 
 func _dumpJson(r wazero.Runtime, addr int32) {
@@ -103,20 +113,16 @@ func main() {
 		fmt.Printf("error: %v\n", err)
 		return
 	}
-	fmt.Printf("aaaaa\n")
 	_, err = r.InstantiateWithConfig(ctx, wenv, wazero.NewModuleConfig().WithName("env"))
 	if err != nil {
 		fmt.Printf("error: %v\n", err)
 		return
 	}
-	fmt.Printf("aaaaa\n")
 	mod, err := r.Instantiate(ctx, policy)
 	if err != nil {
 		fmt.Printf("error: %v\n", err)
 		return
 	}
-	entry, _ := mod.ExportedFunction("entrypoints").Call(ctx)
-	print(entry)
 	addr, err := mod.ExportedFunction("opa_eval").Call(
 		ctx,
 		0,
@@ -140,6 +146,4 @@ func main() {
 
 	outp, _ := r.Module("env").ExportedMemory("memory").Read(uint32(addr[0]), uint32(idx))
 	fmt.Printf("%s\n", string(outp[:]))
-
-	fmt.Printf("aaaaa")
 }
