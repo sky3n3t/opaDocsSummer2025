@@ -1,3 +1,3 @@
 package example
 
-allow = input.bar
+allow = 1+1
